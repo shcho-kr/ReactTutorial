@@ -4,92 +4,45 @@
 <body>
     <div id="root"></div>
 </body>
-<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script type="text/babel">
-    const root = document.getElementById("root");
-    /* const Title = () => (
-        <h3 id="title" onMouseEnter={() => console.log("mouse enter")}>
-            mouse enter
-        </h3>
-    ); */
-    /* 
-    const h3 = React.createElement("h3", {
-        onMouseEnter: () => console.log("mouse enter"),
-    }, "Hello!");
-    */
-    /* const Button = () => (
-        <button style={{ backgroundColor: "tomato", }} onClick={() => console.log("clicked!")}>
-            clicked!
-        </button>
-    ); */
-    /* 
-    const btn = React.createElement("button", {
-        onClick: () => console.log("clicked!"),
-    }, "Click me");
-     */
 
-    const MinutesToHours = () => {
-        const [amount, setAmount] = React.useState(0);
-        const [inverted, setInverted] = React.useState(false);
-        const onChange = (event) => {
-            setAmount(event.target.value);
-        };
-        const reset = () => setAmount(0);
-        const onInvert = () => {
-            reset();
-            setInverted((current) => !current);
-        }
+    function Btn({ text, changeValue }) {
+        console.log(text, "is changed!");
         return (
-            <div>
-                <div>
-                    <label htmlFor="minutes">Minutes</label>
-                    <input
-                        value={inverted ? amount * 60 : amount}
-                        id="minutes"
-                        placeholder="Minutes"
-                        type="number"
-                        onChange={onChange}
-                        disabled={inverted}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="hours">Hours</label>
-                    <input
-                        value={inverted ? amount : amount / 60}
-                        id="hours"
-                        placeholder="Hours"
-                        type="number"
-                        disabled={!inverted}
-                        onChange={onChange}
-                    />
-                </div>
-                <button onClick={reset}>Reset</button>
-                <button onClick={onInvert}>{inverted ? "Turn back" : "Invert"}</button>
-            </div>);
+            <button
+                onClick={changeValue}
+                style={{
+                    backgroundColor: "tomato",
+                    color: "white",
+                    padding: "15px 20px",
+                    border: 0,
+                    borderRadius: 10,
+                    fontSize: 16,
+                }}>
+                {text}
+            </button>
+        );
     }
-    const App = () => {
-        const [index, setIndex] = React.useState("x");
-        const onSelect = (event) => {
-            setIndex(event.target.value);
-        }
+    const MemorizedBtn = React.memo(Btn);
+    MemorizedBtn.propTypes = {
+        text: PropTypes.string,
+        changeValue: PropTypes.func.isRequired,
+    }
+    function App() {
+        const [value, setValue] = React.useState("Save Changes");
+        const changeValue = () => setValue(1);
         return (
             <div>
-                <h1 className="hi">Super converter</h1>
-                <select value={index} onChange={onSelect}>
-                    <option value="x">Select unit</option>
-                    <option value="1">Minutes & Hours</option>
-                </select>
-                <hr />
-                {index === "x" ? "Select unit" : null}
-                {index === "1" ? <MinutesToHours /> : null}
-
-
+                <MemorizedBtn text={value} changeValue={changeValue} />
+                <MemorizedBtn text="Continue" />
             </div>
         );
     }
-    //  const container = React.createElement("div", null, [Title, Button]);
+    const root = document.getElementById("root");
     ReactDOM.render(<App />, root);
 </script>
 
